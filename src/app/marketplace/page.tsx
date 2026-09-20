@@ -20,7 +20,7 @@ const FILTERS: Array<{ id: MissionType | "all"; label: string }> = [
 ];
 
 export default function MarketplacePage() {
-  const { liveMissions, drones } = useDroneFleet();
+  const { liveMissions, drones, postMission } = useDroneFleet();
   const { address, signForContract } = useWallet();
 
   // Missions funded in this session sit alongside the simulated board until
@@ -31,7 +31,11 @@ export default function MarketplacePage() {
   const [notice, setNotice] = useState<string | null>(null);
 
   const missions = useMemo(() => {
-    const all = [...funded, ...liveMissions];
+    // A funded mission is also on the fleet board, where the simulation moves
+    // it through claimed and flown. That copy is the live one, so prefer it and
+    // keep the funded entry only until the board has caught up.
+    const onBoard = new Set(liveMissions.map((m) => m.id));
+    const all = [...funded.filter((m) => !onBoard.has(m.id)), ...liveMissions];
     return filter === "all" ? all : all.filter((m) => m.type === filter);
   }, [funded, liveMissions, filter]);
 
@@ -146,7 +150,13 @@ export default function MarketplacePage() {
             actually move money lead instead of trailing them. */}
         <div className="order-1 min-w-0 space-y-4 lg:order-none">
           <FundMissionPanel
-            onFunded={(mission) => setFunded((prev) => [mission, ...prev])}
+            onFunded={(mission) => {
+              setFunded((prev) => [mission, ...prev]);
+              // Hand it straight to the fleet. Nobody dispatches the aircraft —
+              // the first one rated for this work and near enough to reach it
+              // takes the job off the board on its own.
+              postMission(mission);
+            }}
           />
           <SettlementPanel
             missions={funded}

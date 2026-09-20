@@ -90,6 +90,15 @@ export function useDroneSimulator() {
   );
   const [liveMissions, setLiveMissions] = useState<Mission[]>(() => [...initialMissions]);
 
+  /**
+   * Work funded on chain joins the same board the fleet already reads from,
+   * so an aircraft picks it up on its own rather than waiting to be told. The
+   * claim loop below does not care where a mission came from.
+   */
+  const postMission = useCallback((mission: Mission) => {
+    setLiveMissions((prev) => [mission, ...prev]);
+  }, []);
+
   const dronesRef = useRef(drones);
   const missionsRef = useRef(liveMissions);
   useEffect(() => { dronesRef.current = drones; }, [drones]);
@@ -455,7 +464,7 @@ export function useDroneSimulator() {
     return () => clearInterval(iv);
   }, [emitMissionComplete]);
 
-  return { drones, liveMissions };
+  return { drones, liveMissions, postMission };
 }
 
 /* ─── Terminal Log Hook (Simülasyon Motoru) ─── */

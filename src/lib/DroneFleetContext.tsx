@@ -16,14 +16,21 @@ interface FleetContextType {
   logs: { time: string; drone: string; level: string; msg: string }[];
   /** False during SSR and the first client render, so callers can show a skeleton. */
   ready: boolean;
+  /** Put a mission on the board the fleet reads from. */
+  postMission: (mission: Mission) => void;
 }
 
-const EMPTY: FleetContextType = { drones: [], liveMissions: [], logs: [], ready: false };
+const EMPTY: Omit<FleetContextType, "postMission"> = {
+  drones: [],
+  liveMissions: [],
+  logs: [],
+  ready: false,
+};
 
 const FleetContext = createContext<FleetContextType | undefined>(undefined);
 
 export function DroneFleetProvider({ children }: { children: ReactNode }) {
-  const { drones, liveMissions } = useDroneSimulator();
+  const { drones, liveMissions, postMission } = useDroneSimulator();
   const logs = useTerminalLogs(drones);
 
   // The simulation seeds itself from Math.random() and new Date(), so the server
@@ -34,8 +41,11 @@ export function DroneFleetProvider({ children }: { children: ReactNode }) {
   useEffect(() => setMounted(true), []);
 
   const value = useMemo<FleetContextType>(
-    () => (mounted ? { drones, liveMissions, logs, ready: true } : EMPTY),
-    [mounted, drones, liveMissions, logs],
+    () =>
+      mounted
+        ? { drones, liveMissions, logs, ready: true, postMission }
+        : { ...EMPTY, postMission },
+    [mounted, drones, liveMissions, logs, postMission],
   );
 
   return <FleetContext.Provider value={value}>{children}</FleetContext.Provider>;

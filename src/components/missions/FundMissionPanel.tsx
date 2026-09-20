@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Check, ExternalLink, Loader2, Lock } from "lucide-react";
 import { useWallet } from "@/lib/stellar/WalletContext";
@@ -13,6 +14,16 @@ import {
   tryToScaled,
 } from "@/lib/stellar/escrow";
 import type { Mission, MissionType } from "@/lib/data";
+import type { Point } from "./PointSelectMap";
+
+// maplibre reaches for window as soon as it loads, so the picker only exists
+// in the browser. The placeholder holds the panel height so nothing jumps.
+const PointSelectMap = dynamic(() => import("./PointSelectMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[190px] w-full animate-pulse border border-bezel bg-panel-void" />
+  ),
+});
 
 const TYPES: Array<{ id: MissionType; label: string; blurb: string }> = [
   { id: "cargo", label: "Cargo", blurb: "Move a package between two points" },
@@ -35,8 +46,8 @@ export function FundMissionPanel({ onFunded }: Props) {
 
   const [type, setType] = useState<MissionType>("cargo");
   const [title, setTitle] = useState("");
-  const [from, setFrom] = useState("40.9900, 29.0270");
-  const [to, setTo] = useState("41.0430, 29.0080");
+  const [from, setFrom] = useState<Point>({ lat: 40.99, lng: 29.027 });
+  const [to, setTo] = useState<Point>({ lat: 41.043, lng: 29.008 });
   const [tryPrice, setTryPrice] = useState("250");
   const [hours, setHours] = useState("24");
 
@@ -103,19 +114,16 @@ export function FundMissionPanel({ onFunded }: Props) {
         signForContract,
       );
 
-      const [fromLat, fromLng] = from.split(",").map((n) => Number(n.trim()));
-      const [toLat, toLng] = to.split(",").map((n) => Number(n.trim()));
-
       onFunded(
         {
           id,
           type,
           title: title.trim(),
           description: `Escrowed ${Number(tryPrice).toFixed(2)} TRY`,
-          fromLat,
-          fromLng,
-          toLat,
-          toLng,
+          fromLat: from.lat,
+          fromLng: from.lng,
+          toLat: to.lat,
+          toLng: to.lng,
           payment: Number(amount) / 1e7,
           status: "open",
           droneId: null,
@@ -227,30 +235,14 @@ export function FundMissionPanel({ onFunded }: Props) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5">
-          <div>
-            <label htmlFor="m-from" className="readout-label mb-1.5 block">
-              Pick up
-            </label>
-            <input
-              id="m-from"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="w-full border border-bezel bg-panel-void px-3 py-2 font-mono text-[12px] text-text-primary outline-none focus:border-nav"
-            />
-          </div>
-          <div>
-            <label htmlFor="m-to" className="readout-label mb-1.5 block">
-              Drop off
-            </label>
-            <input
-              id="m-to"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="w-full border border-bezel bg-panel-void px-3 py-2 font-mono text-[12px] text-text-primary outline-none focus:border-nav"
-            />
-          </div>
-        </div>
+        <PointSelectMap
+          from={from}
+          to={to}
+          onChange={(next) => {
+            setFrom(next.from);
+            setTo(next.to);
+          }}
+        />
 
         <div className="grid grid-cols-2 gap-2.5">
           <div>
