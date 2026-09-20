@@ -1,11 +1,17 @@
 # RiverAir
 
-**Drone work in Turkey, priced in lira and settled on Stellar.**
+**An agentic drone network for Turkey, settled on Stellar.**
 
-A farmer books a spraying run and pays from their bank account. The operator who flies it
-is paid into theirs. In between, the money sits in a Soroban contract that releases it
-only once the work is done — and refuses to release it at all if the price feed it is
-settling against has gone stale.
+Turkey builds some of the best drones in the world and puts almost none of them to
+everyday work. RiverAir is the layer that was missing — an agentic network where fleets
+are dispatched, priced and paid the moment the job is done. Crop spraying, cargo, patrol,
+fire watch: the everyday problems a drone solves faster than anything on the ground. The
+country that builds the aircraft should be the one that puts them to work.
+
+The money is handled properly underneath. A farmer books a spraying run and pays from
+their bank account in lira. The operator who flies it is paid into theirs. In between, the
+money sits in a Soroban contract that releases it only once the work is done — and refuses
+to release it at all if the price feed it is settling against has gone stale.
 
 Built for the Rise In × Stellar Pro Hackathon 2026, Genesis Track. Stellar testnet.
 

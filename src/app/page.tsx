@@ -67,10 +67,12 @@ function Hero() {
         </h1>
 
         <p className="landing-in landing-in-d1 mt-7 max-w-[52ch] text-[15.5px] leading-relaxed text-text-secondary">
-          A farmer books a spraying run and pays from their bank account. The operator
-          who flies it is paid into theirs. In between, the money sits in a contract on
-          Stellar that releases it only once the work is done — and refuses to release
-          it at all if the exchange rate it is pricing against has gone stale.
+          Turkey builds some of the best drones in the world and puts almost none of
+          them to everyday work. RiverAir is the layer that was missing — an agentic
+          network where fleets are dispatched, priced and paid the moment the job is
+          done. Crop spraying, cargo, patrol, fire watch. Booked in lira, settled on
+          Stellar. The country that builds the aircraft should be the one that puts
+          them to work.
         </p>
 
         <div className="landing-in landing-in-d2 mt-9 flex flex-wrap gap-2.5">

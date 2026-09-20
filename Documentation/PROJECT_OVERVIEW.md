@@ -2,11 +2,16 @@
 
 ## What is RiverAir?
 
-RiverAir is a marketplace for autonomous drone work in Turkey where the money is handled
-properly. A customer books a job and pays from their bank account in lira. The operator who
-flies it is paid into their bank account in lira. In between, the payment sits in a Soroban
-contract on Stellar that releases it only once the work is done — and refuses to release it
-if the exchange rate it is settling against has gone stale.
+Turkey builds some of the best drones in the world and puts almost none of them to everyday
+work. RiverAir is the layer that was missing — an agentic network where autonomous fleets
+are dispatched, priced and paid the moment the job is done. Crop spraying, cargo, patrol,
+fire watch: the everyday problems a drone solves faster than anything on the ground.
+
+The money is handled properly underneath. A customer books a job and pays from their bank
+account in lira. The operator who flies it is paid into their bank account in lira. In
+between, the payment sits in a Soroban contract on Stellar that releases it only once the
+work is done — and refuses to release it if the exchange rate it is settling against has
+gone stale.
 
 Built for the Rise In × Stellar Pro Hackathon 2026, Genesis Track, on Stellar testnet.
 
