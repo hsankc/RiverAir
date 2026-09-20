@@ -1,0 +1,668 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   RiverAir — approach plate
+   ---------------------------------------------------------------------------
+   The visual language is the instrument approach chart, not the crypto
+   dashboard: hairline geometry that carries information rather than decorating,
+   dense hard-ruled blocks, and a figure set that reads at a glance because
+   every number is monospaced and tabular.
+
+   Colour comes from the mark itself — cyan network lines and gold nodes on a
+   near-black ground — and stays semantic. Cyan is structure and telemetry,
+   gold is the thing to act on, green is engaged, amber cautions, red stops.
+   Nothing is tinted for looks.
+
+   Ground is deep enough that a plate genuinely sits above it. The previous
+   pass put panels six percent above the background, which reads as flat grey
+   on any screen that is not a calibrated one.
+   =========================================================================== */
+
+@theme {
+  /* ── Ground and plates ── */
+  --color-panel-void: #04080c;
+  --color-panel-base: #070d13;
+  --color-panel-raised: #0e1922;
+  --color-panel-high: #16242f;
+  --color-bezel: #1e3242;
+  --color-bezel-lit: #325266;
+
+  /* Aliases — some pages reference the palette through these names. */
+  --color-bg-primary: #070d13;
+  --color-bg-secondary: #0e1922;
+  --color-bg-tertiary: #16242f;
+  --color-bg-elevated: #1e3242;
+  --color-border: #1e3242;
+  --color-border-hover: #325266;
+
+  /* ── Chart type ── */
+  --color-text-primary: #eaf2f7;
+  --color-text-secondary: #9fbccd;
+  --color-text-muted: #61839a;
+
+  /* ── Semantic instrument colours ── */
+  --color-nav: #ffb627; /* gold: the thing to act on */
+  --color-nav-dim: #a8741a;
+  --color-caution: #ff9f45;
+  --color-engaged: #2fe08a;
+  --color-data: #45d4f0;
+  --color-warning: #ff5a5a;
+
+  --color-accent-cyan: #45d4f0;
+  --color-accent-purple: #ffb627;
+  --color-accent-blue: #45d4f0;
+  --color-accent-violet: #ffb627;
+  --color-success: #2fe08a;
+  --color-danger: #ff5a5a;
+
+  /* ── Type ── */
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-condensed: var(--font-plex-condensed), var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  /* =================== Base =================== */
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--color-panel-base);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    max-width: 68ch;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-nav);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: rgba(255, 176, 0, 0.26);
+    color: #fff;
+  }
+
+  /* =================== Scrollbar =================== */
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-panel-void);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-bezel);
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-bezel-lit);
+  }
+}
+
+@layer components {
+  /* =================== Panels ===================
+     A module is a bezelled plate: squared corners, a lit top edge that reads as
+     the panel catching light, and a hairline border. No blur, no glass. */
+
+  .panel,
+  .glass,
+  .glass-card {
+    background: linear-gradient(
+      180deg,
+      var(--color-panel-high) 0%,
+      var(--color-panel-raised) 34%
+    );
+    border: 1px solid var(--color-bezel);
+    border-radius: 3px;
+    position: relative;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 8px 24px -12px rgba(0, 0, 0, 0.9);
+  }
+
+  .panel::before,
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.11) 18%,
+      rgba(255, 255, 255, 0.11) 82%,
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .panel-inset {
+    background: var(--color-panel-void);
+    border: 1px solid var(--color-bezel);
+    border-radius: 2px;
+  }
+
+  /* A placard: the engraved designation strip along a module's top edge. */
+  .placard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--color-bezel);
+    font-family: var(--font-condensed);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .stat-card {
+    background: var(--color-panel-raised);
+    border: 1px solid var(--color-bezel);
+    border-left: 2px solid var(--color-bezel-lit);
+    border-radius: 2px;
+    padding: 14px 16px;
+    transition: border-left-color 0.18s ease;
+  }
+
+  .stat-card:hover {
+    border-left-color: var(--color-data);
+  }
+
+  /* A readout: the number is the point, so it gets the weight and the space. */
+  .readout {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "zero" 1;
+    color: var(--color-data);
+    line-height: 1;
+  }
+
+  .readout-label {
+    font-family: var(--font-condensed);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* =================== Type helpers ===================
+     Display type is set as a block, not as a sentence: condensed, tight, and
+     large enough that the first line carries the page on its own. */
+
+  .display {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    font-size: clamp(3rem, 8.5vw, 6.75rem);
+    line-height: 0.93;
+    letter-spacing: -0.032em;
+    text-wrap: balance;
+  }
+
+  .display-sm {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
+  /* A figure meant to be read across a room. */
+  .figure-lg {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "zero" 1;
+    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .gradient-text {
+    color: var(--color-text-primary);
+  }
+
+  .gradient-bg {
+    background: var(--color-nav);
+  }
+
+  /* =================== Controls =================== */
+
+  .btn-primary {
+    background: var(--color-nav);
+    color: #1a1206;
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 9px 20px;
+    border-radius: 2px;
+    border: 1px solid var(--color-nav);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.16s ease, border-color 0.16s ease;
+  }
+
+  .btn-primary {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.35) inset,
+      0 0 0 rgba(255, 182, 39, 0);
+    transition:
+      background 0.16s ease,
+      border-color 0.16s ease,
+      box-shadow 0.22s ease;
+  }
+
+  .btn-primary:hover {
+    background: #ffc85c;
+    border-color: #ffc85c;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.45) inset,
+      0 0 22px -4px rgba(255, 182, 39, 0.55);
+  }
+
+  .btn-primary:disabled {
+    background: var(--color-panel-high);
+    border-color: var(--color-bezel);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 9px 20px;
+    border-radius: 2px;
+    border: 1px solid var(--color-bezel-lit);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.16s ease, border-color 0.16s ease;
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-panel-high);
+    border-color: var(--color-data);
+    box-shadow: 0 0 18px -6px rgba(69, 212, 240, 0.5);
+  }
+
+  /* =================== Backgrounds =================== */
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(69, 212, 240, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(69, 212, 240, 0.055) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* The hairline graticule a chart is ruled on, fading out at the edges so it
+     frames the content instead of tiling over it. */
+  .bg-chart {
+    background-image:
+      linear-gradient(rgba(69, 212, 240, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(69, 212, 240, 0.07) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 78%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 78%);
+  }
+
+  /* A route leg drawing itself along the chart. One orchestrated moment on
+     load; it does not loop and it stops entirely under reduced motion. */
+  @keyframes leg-draw {
+    from {
+      stroke-dashoffset: var(--leg-length, 600);
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .leg-draw {
+    stroke-dasharray: var(--leg-length, 600);
+    animation: leg-draw 1.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--leg-delay, 0s);
+    stroke-dashoffset: var(--leg-length, 600);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .leg-draw {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(rgba(169, 188, 200, 0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* A radar sweep, for the one place a live scope belongs. */
+  @keyframes radar-sweep {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .radar-sweep {
+    animation: radar-sweep 4s linear infinite;
+    transform-origin: center;
+  }
+
+  /* =================== Terminal =================== */
+
+  .terminal {
+    background: var(--color-panel-void);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-bezel);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    line-height: 1.7;
+    overflow: hidden;
+  }
+
+  .terminal-header {
+    background: var(--color-panel-raised);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--color-bezel);
+    font-family: var(--font-condensed);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .terminal-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .terminal-body {
+    padding: 12px;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .terminal-scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.22), transparent);
+    animation: scanline 9s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scanline {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+
+  /* =================== Status =================== */
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .status-active {
+    background: var(--color-engaged);
+    box-shadow: 0 0 6px rgba(46, 212, 122, 0.8);
+    animation: glow-pulse 2.4s ease-in-out infinite;
+  }
+
+  .status-charging {
+    background: var(--color-caution);
+    box-shadow: 0 0 6px rgba(255, 138, 61, 0.8);
+  }
+
+  .status-emergency {
+    background: var(--color-warning);
+    box-shadow: 0 0 6px rgba(255, 82, 82, 0.9);
+    animation: glow-pulse 0.9s ease-in-out infinite;
+  }
+
+  .status-idle {
+    background: var(--color-text-muted);
+  }
+
+  /* =================== Map =================== */
+
+  .leaflet-container {
+    background: var(--color-panel-void) !important;
+    border-radius: 2px;
+  }
+
+  /* Settles the basemap into the instrument palette without touching the
+     markers drawn on top. Esri's dark canvas is already dark, so this stays
+     gentle: at brightness(0.5) the sparser eastern tiles crushed to solid
+     black and the right-hand third of the map read as "not loaded". */
+  .leaflet-tile-pane {
+    filter: brightness(0.82) saturate(0.6) contrast(1.08);
+  }
+
+  .leaflet-control-zoom a {
+    background: var(--color-panel-raised) !important;
+    color: var(--color-text-secondary) !important;
+    border-color: var(--color-bezel) !important;
+    border-radius: 0 !important;
+  }
+
+  .leaflet-popup-content-wrapper {
+    background: var(--color-panel-raised) !important;
+    color: var(--color-text-primary) !important;
+    border: 1px solid var(--color-bezel-lit) !important;
+    border-radius: 2px !important;
+  }
+
+  .leaflet-popup-tip {
+    background: var(--color-panel-raised) !important;
+  }
+}
+
+/* =================== Motion ===================
+   One orchestrated entrance on load, and transitions that answer a click.
+   Nothing loops for decoration except the two live indicators above. */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes loading-bar {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.22s ease-out forwards;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+.animate-drone-blip {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* The landing page's one page-load sequence. */
+.landing-in {
+  opacity: 0;
+  animation: fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.landing-in-d1 {
+  animation-delay: 0.06s;
+}
+.landing-in-d2 {
+  animation-delay: 0.13s;
+}
+.landing-in-d3 {
+  animation-delay: 0.2s;
+}
+.landing-in-d4 {
+  animation-delay: 0.27s;
+}
+.landing-in-d5 {
+  animation-delay: 0.34s;
+}
+.landing-in-d6 {
+  animation-delay: 0.41s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .landing-in {
+    opacity: 1 !important;
+  }
+}
+
+/* =================== Utilities =================== */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Launch pad labels on the operations map. */
+.pad-label {
+  background: rgba(12, 17, 22, 0.88) !important;
+  border: 1px solid var(--color-bezel-lit) !important;
+  border-radius: 2px !important;
+  color: var(--color-text-secondary) !important;
+  font-family: var(--font-condensed) !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0.06em !important;
+  padding: 2px 6px !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+}
+
+.pad-label::before {
+  display: none !important;
+}
