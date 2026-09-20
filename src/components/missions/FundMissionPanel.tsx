@@ -129,6 +129,7 @@ export function FundMissionPanel({ onFunded }: Props) {
           droneId: null,
           createdAt: new Date(),
           priority: false,
+          onChain: true,
         },
         hash,
       );

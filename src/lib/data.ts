@@ -80,6 +80,8 @@ export interface Mission {
   droneId: number | null;
   createdAt: Date;
   priority: boolean;
+  /** Funded through the escrow contract, not seeded on the demo board. */
+  onChain?: boolean;
 }
 
 export interface FlightLog {

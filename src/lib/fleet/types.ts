@@ -52,6 +52,12 @@ export interface DroneDefinition {
   base: HomeBase;
   /** Mission types this airframe will accept. */
   accepts: MissionType[];
+  /**
+   * Held back for work funded on chain. A standby airframe ignores the demo
+   * board entirely, so a customer who posts and pays for a real mission always
+   * finds an aircraft free to take it instead of queueing behind the show.
+   */
+  standby?: boolean;
   onSite: OnSiteBehaviour;
   /** Orbit radius in degrees, for the types that circle. */
   orbitRadius: number;

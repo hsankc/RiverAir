@@ -5,6 +5,7 @@ import { AppShell } from "@/components/AppShell";
 import { FundMissionPanel } from "@/components/missions/FundMissionPanel";
 import { MissionCard } from "@/components/missions/MissionCard";
 import { SettlementPanel } from "@/components/missions/SettlementPanel";
+import { YourMissionsPanel } from "@/components/missions/YourMissionsPanel";
 import { useDroneFleet } from "@/lib/DroneFleetContext";
 import { useWallet } from "@/lib/stellar/WalletContext";
 import { assignMission, explainEscrowError } from "@/lib/stellar/escrow";
@@ -26,6 +27,8 @@ export default function MarketplacePage() {
   // Missions funded in this session sit alongside the simulated board until
   // the operator picks them up.
   const [funded, setFunded] = useState<Mission[]>([]);
+  /** Funding transaction per mission id, so the panel can link the escrow. */
+  const [txs, setTxs] = useState<Record<number, string>>({});
   const [filter, setFilter] = useState<MissionType | "all">("all");
   const [claiming, setClaiming] = useState<number | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -149,9 +152,11 @@ export default function MarketplacePage() {
         {/* On a phone the board is a dozen cards long, so the two panels that
             actually move money lead instead of trailing them. */}
         <div className="order-1 min-w-0 space-y-4 lg:order-none">
+          <YourMissionsPanel funded={funded} live={liveMissions} drones={drones} txs={txs} />
           <FundMissionPanel
-            onFunded={(mission) => {
+            onFunded={(mission, txHash) => {
               setFunded((prev) => [mission, ...prev]);
+              setTxs((prev) => ({ ...prev, [mission.id]: txHash }));
               // Hand it straight to the fleet. Nobody dispatches the aircraft —
               // the first one rated for this work and near enough to reach it
               // takes the job off the board on its own.

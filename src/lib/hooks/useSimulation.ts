@@ -247,18 +247,32 @@ export function useDroneSimulator() {
           // Claim a mission this airframe is rated for. Always taking the
           // nearest makes the fleet converge on one district and fly the same
           // lines, so each drone picks at random from the few closest to it.
+          //
+          // Work funded on chain is somebody's actual money sitting in escrow,
+          // so it does not wait behind the demo board: the standby airframe
+          // flies nothing else, and every other aircraft sorts it to the front.
           const candidates = missions
             .filter(
-              (m) => m.status === "open" && !claimed.has(m.id) && def.accepts.includes(m.type),
+              (m) =>
+                m.status === "open" &&
+                !claimed.has(m.id) &&
+                def.accepts.includes(m.type) &&
+                (!def.standby || m.onChain === true),
             )
-            .sort(
-              (a, b) =>
+            .sort((a, b) => {
+              if (!!a.onChain !== !!b.onChain) return a.onChain ? -1 : 1;
+              return (
                 distanceDeg(d.lat, d.lng, a.fromLat, a.fromLng) -
-                distanceDeg(d.lat, d.lng, b.fromLat, b.fromLng),
-            );
+                distanceDeg(d.lat, d.lng, b.fromLat, b.fromLng)
+              );
+            });
 
           if (candidates.length === 0) return { ...d, speed: 0, altitude: 0 };
-          const best = candidates[Math.floor(Math.random() * Math.min(3, candidates.length))];
+          // Spreading the fleet matters on the demo board, not on paid work —
+          // that goes to the nearest aircraft, not a random one of the three.
+          const best = candidates[0].onChain
+            ? candidates[0]
+            : candidates[Math.floor(Math.random() * Math.min(3, candidates.length))];
 
           claimed.add(best.id);
           byId.set(best.id, { ...best, status: "accepted", droneId: d.id });
