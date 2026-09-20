@@ -139,6 +139,51 @@ behind it.
 
 ---
 
+## Stellar, off the screen
+
+This is not really about drones. A drone is just the first machine we pointed it at.
+
+The pattern underneath is older and larger than any airframe: something in the physical
+world does a job, proves that it did it, and is paid for it — with nobody standing in the
+middle to vouch for any of the three. Almost every attempt at that stalls in the same
+place. The work happens in the world, the money lives in a bank, and the only thing
+joining them is an invoice and somebody's word.
+
+Stellar closes that gap, and four of its properties are why. None of them are incidental
+here — take any one away and this project stops working.
+
+**One key does both jobs.** Stellar accounts are Ed25519 keypairs, and so is the signature
+an ESP32 puts on a flight record. The public key that signs *this aircraft flew this
+route* **is** the address that receives the payment: the same 32 bytes, with no registry,
+no mapping table and no trusted party in between. A machine can hold its own account,
+which means it can be paid directly rather than through whoever happens to own it.
+
+**Fiat is a standard, not an integration.** SEP-1, 6, 10, 12 and 38 are an interface any
+anchor implements. The lira reaches the chain through that interface rather than through
+a private arrangement, which is why `/ramp` discovers every endpoint from a
+`stellar.toml` at runtime instead of hardcoding one. The day a production Turkish anchor
+exists, this code points at its domain and nothing else changes.
+
+**Settlement is allowed to refuse.** `complete()` reads Reflector inside the payout call
+and declines on a stale or depegged price. When a machine pays a machine there is nobody
+to ring about a wrong number, so the refusal has to live in the contract rather than in
+an operations team that notices on Monday.
+
+**Fees are small enough to meter.** A charging pod ticking every two seconds cannot carry
+a cent of fee per tick. Sub-cent settlement is what makes a physical service chargeable
+by the second at all, instead of by the month.
+
+Swap the aircraft out and the shape holds. An EV charger settling by the kilowatt-hour.
+A tractor billing for the hectares it actually covered. A cold-chain sensor proving a
+shipment never rose above four degrees, and releasing the payment because it didn't. A
+village water pump selling by the litre to people with a phone and no bank account.
+Every one of them does physical work, every one of them can hold a key, and none of them
+has a payment rail built for machines rather than for people.
+
+That is the gap this is built in. The drones are the proof, not the point.
+
+---
+
 ## The fleet
 
 Eight aircraft, two in each discipline, each defined in its own file under

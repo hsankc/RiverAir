@@ -14,6 +14,7 @@ export default function LandingPage() {
         <Hero />
         <MoneyFlow />
         <OracleGuard />
+        <PhysicalWorld />
         <Foundations />
       </main>
       <Footer />
@@ -315,6 +316,76 @@ function Refusal({ code, when, why }: { code: string; when: string; why: string 
 }
 
 /* -------------------------------------------------------------- the facts */
+
+/* -------------------------------------------------------- physical world */
+
+function PhysicalWorld() {
+  return (
+    <section className="border-t border-bezel">
+      <div className="mx-auto max-w-6xl px-5 py-16">
+        <h2 className="font-condensed text-3xl font-semibold text-text-primary">
+          Stellar, off the screen
+        </h2>
+
+        <p className="mt-4 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
+          This is not really about drones. A drone is just the first machine we pointed it
+          at. The pattern underneath is older and larger than any airframe: something in the
+          physical world does a job, proves that it did it, and is paid for it &mdash; with
+          nobody standing in the middle to vouch for any of the three. Almost every attempt
+          at that stalls in the same place. The work happens in the world, the money lives in
+          a bank, and the only thing joining them is an invoice and somebody&apos;s word.
+        </p>
+
+        <p className="mt-3 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
+          Stellar closes that gap, and four of its properties are why. None of them are
+          decoration here &mdash; take any one away and this stops working.
+        </p>
+
+        <dl className="mt-8 grid grid-cols-1 gap-px border border-bezel bg-bezel sm:grid-cols-2">
+          <Property
+            term="One key does both jobs"
+            body="Stellar accounts are Ed25519 keypairs, and so is the signature an ESP32 puts on a flight record. The key that signs which aircraft flew a route is the address that receives the payment — the same 32 bytes, with no registry and no trusted party in between. A machine can hold its own account."
+          />
+          <Property
+            term="Fiat is a standard, not an integration"
+            body="SEP-1, 6, 10, 12 and 38 are an interface any anchor implements. The lira reaches the chain through that interface rather than a private arrangement, which is why the ramp discovers every endpoint from a stellar.toml at runtime. Point it at a production anchor and nothing else changes."
+          />
+          <Property
+            term="Settlement is allowed to refuse"
+            body="The escrow reads the price feed inside the payout call and declines on a stale or depegged number. When a machine pays a machine there is nobody to ring about a wrong figure, so the refusal has to live in the contract rather than in a team that notices on Monday."
+          />
+          <Property
+            term="Fees small enough to meter"
+            body="A charging pod ticking every two seconds cannot carry a cent of fee per tick. Sub-cent settlement is what makes a physical service chargeable by the second at all, instead of by the month."
+          />
+        </dl>
+
+        <p className="mt-8 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
+          Swap the aircraft out and the shape holds. An EV charger settling by the
+          kilowatt-hour. A tractor billing for the hectares it actually covered. A cold-chain
+          sensor proving a shipment never rose above four degrees, and releasing the payment
+          because it did not. A village water pump selling by the litre to people with a
+          phone and no bank account. Every one of them does physical work, every one of them
+          can hold a key, and none of them has a payment rail built for machines rather than
+          for people.
+        </p>
+
+        <p className="mt-4 max-w-[68ch] text-[15px] font-medium leading-relaxed text-text-primary">
+          That is the gap this is built in. The drones are the proof, not the point.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function Property({ term, body }: { term: string; body: string }) {
+  return (
+    <div className="bg-panel-base p-5">
+      <dt className="font-condensed text-[15px] font-semibold text-text-primary">{term}</dt>
+      <dd className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">{body}</dd>
+    </div>
+  );
+}
 
 function Foundations() {
   return (
