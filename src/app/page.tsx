@@ -1,12 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { useReveal } from "@/lib/hooks/useReveal";
 import { BrandLockup } from "@/components/BrandLockup";
 import { OperatingAreaChart } from "@/components/OperatingAreaChart";
 import { ANCHOR, MISSION_ESCROW_ID, explorerContract } from "@/lib/stellar/config";
+import { FLEET } from "@/lib/fleet";
+
+/* The four discipline colours, reused by every block below. */
+const GOLD = "#ffb627";
+const CYAN = "#45d4f0";
+const GREEN = "#2fe08a";
+const RED = "#ff5a5a";
 
 export default function LandingPage() {
+  useReveal();
+
   return (
     <div className="min-h-screen bg-panel-base">
       <Header />
@@ -14,7 +25,10 @@ export default function LandingPage() {
         <Hero />
         <MoneyFlow />
         <OracleGuard />
+        <Disciplines />
+        <Fleet />
         <PhysicalWorld />
+        <UnderTheHood />
         <Foundations />
       </main>
       <Footer />
@@ -76,12 +90,25 @@ function Hero() {
           them to work.
         </p>
 
-        <div className="landing-in landing-in-d2 mt-9 flex flex-wrap gap-2.5">
-          <Link href="/ramp" className="btn-primary">
-            Move some lira
+        {/* The console is what the whole page is arguing for, so it gets the
+            weight. The ramp keeps a quiet link: it matters, but only after
+            somebody has decided to look. */}
+        <div className="landing-in landing-in-d2 mt-10 flex flex-wrap items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="btn-primary btn-lg inline-flex items-center gap-2"
+          >
+            Open the console
+            <ArrowRight className="h-[18px] w-[18px]" />
           </Link>
-          <Link href="/marketplace" className="btn-secondary">
+          <Link href="/marketplace" className="btn-secondary btn-lg">
             See the mission board
+          </Link>
+          <Link
+            href="/ramp"
+            className="ml-1 text-[14px] font-medium text-text-secondary underline decoration-bezel-lit underline-offset-[5px] transition-colors hover:text-nav"
+          >
+            Move some lira
           </Link>
         </div>
       </div>
@@ -216,33 +243,39 @@ const STEPS = [
   },
 ];
 
+/** Fiat in is gold, the chain is cyan, settlement is green. */
+const FLOW_ACCENT = [GOLD, GOLD, CYAN, CYAN, GREEN, GREEN];
+
 function MoneyFlow() {
   return (
     <section className="border-b border-bezel">
-      <div className="mx-auto max-w-6xl px-5 py-16">
-        <h2 className="max-w-[20ch] font-condensed text-3xl font-semibold text-text-primary">
-          Where the money actually goes
-        </h2>
-        <p className="mt-3 max-w-[60ch] text-[14px] leading-relaxed text-text-secondary">
-          Six steps, in order, every one of them a real call against a real network. The
-          only thing simulated on testnet is the bank itself.
-        </p>
+      <div className="mx-auto max-w-6xl px-5 py-20">
+        <SectionHead
+          num="01"
+          label="Money"
+          title={
+            <>
+              Where the money <Lit>actually goes</Lit>
+            </>
+          }
+          lede="Six steps, in order, every one of them a real call against a real network. The only thing simulated on testnet is the bank itself."
+        />
 
-        <ol className="mt-10 grid grid-cols-1 gap-px border border-bezel bg-bezel md:grid-cols-2 lg:grid-cols-3">
+        <ol className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map((step, i) => (
-            <li key={step.title} className="bg-panel-raised p-5">
-              <div className="mb-3 flex items-baseline justify-between gap-3">
-                <span className="readout text-sm text-nav">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="font-mono text-[10.5px] text-text-muted">{step.tag}</span>
-              </div>
-              <h3 className="font-condensed text-[17px] font-semibold text-text-primary">
-                {step.title}
-              </h3>
-              <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
-                {step.body}
-              </p>
+            <li key={step.title} className={stagger(i)}>
+              <GlowCard accent={FLOW_ACCENT[i]} className="h-full">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <Badge accent={FLOW_ACCENT[i]}>{String(i + 1).padStart(2, "0")}</Badge>
+                  <span className="font-mono text-[10.5px] text-text-muted">{step.tag}</span>
+                </div>
+                <h3 className="font-condensed text-[17px] font-semibold text-text-primary">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
+                  {step.body}
+                </p>
+              </GlowCard>
             </li>
           ))}
         </ol>
@@ -256,10 +289,16 @@ function MoneyFlow() {
 function OracleGuard() {
   return (
     <section className="border-b border-bezel bg-panel-void">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-5 py-16 lg:grid-cols-2">
-        <div>
-          <h2 className="max-w-[22ch] font-condensed text-3xl font-semibold text-text-primary">
-            The contract is allowed to say no
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-5 py-20 lg:grid-cols-2">
+        <div className="reveal">
+          <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-bezel bg-panel-raised px-3 py-1">
+            <span className="readout text-[11px] text-nav">02</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted">
+              Settlement guard
+            </span>
+          </div>
+          <h2 className="max-w-[22ch] font-condensed text-3xl font-semibold leading-[1.12] text-text-primary sm:text-[40px]">
+            The contract is <Lit>allowed to say no</Lit>
           </h2>
           <p className="mt-4 max-w-[58ch] text-[14px] leading-relaxed text-text-secondary">
             A mission is agreed in lira but settled in USDC, so the escrow is exposed to
@@ -274,7 +313,7 @@ function OracleGuard() {
           </p>
         </div>
 
-        <div className="panel self-start">
+        <div className="panel reveal reveal-d2 self-start">
           <div className="placard">
             <span>Settlement guard</span>
             <span className="font-mono normal-case tracking-normal">mission-escrow</span>
@@ -317,50 +356,409 @@ function Refusal({ code, when, why }: { code: string; when: string; why: string 
 
 /* -------------------------------------------------------------- the facts */
 
+/* ------------------------------------------------------ shared furniture */
+
+/**
+ * The numbered eyebrow, headline and lede every block below shares. Keeping
+ * them in one component is what stops the sections drifting apart as they get
+ * edited one at a time.
+ */
+function SectionHead({
+  num,
+  label,
+  title,
+  lede,
+}: {
+  num: string;
+  label: string;
+  title: ReactNode;
+  lede: string;
+}) {
+  return (
+    <div className="reveal">
+      <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-bezel bg-panel-raised px-3 py-1">
+        <span className="readout text-[11px] text-nav">{num}</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted">
+          {label}
+        </span>
+      </div>
+      <h2 className="max-w-[26ch] font-condensed text-3xl font-semibold leading-[1.12] text-text-primary sm:text-[40px]">
+        {title}
+      </h2>
+      <p className="mt-4 max-w-[62ch] text-[14px] leading-relaxed text-text-secondary">
+        {lede}
+      </p>
+    </div>
+  );
+}
+
+/** A phrase inside a headline, washed with the fleet's own colours. */
+function Lit({ children }: { children: ReactNode }) {
+  return (
+    <span className="bg-[linear-gradient(100deg,var(--color-nav),var(--color-data)_52%,var(--color-engaged))] bg-clip-text text-transparent">
+      {children}
+    </span>
+  );
+}
+
+/** A card carrying a faint wash of whatever it is about. */
+function GlowCard({
+  accent,
+  className,
+  children,
+}: {
+  accent: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-xl border border-bezel bg-panel-raised p-5 transition duration-300 hover:-translate-y-0.5 hover:border-bezel-lit ${className ?? ""}`}
+      style={{
+        backgroundImage: `radial-gradient(130% 110% at 0% 0%, ${accent}14 0%, transparent 58%)`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** The square that carries a step number, a callsign or a letter. */
+function Badge({ accent, children }: { accent: string; children: ReactNode }) {
+  return (
+    <span
+      className="readout flex h-9 shrink-0 items-center justify-center rounded-lg px-2.5 text-[12.5px]"
+      style={{
+        background: `${accent}1f`,
+        color: accent,
+        boxShadow: `inset 0 0 0 1px ${accent}33`,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/** Six delay classes, so a grid arrives as a sequence rather than a block. */
+function stagger(i: number): string {
+  return `reveal reveal-d${(i % 6) + 1}`;
+}
+
+/* ---------------------------------------------------------- disciplines */
+
+const DISCIPLINES = [
+  {
+    letter: "A",
+    kicker: "Agricultural",
+    name: "Sprayer",
+    tag: "2–6 m",
+    accent: GREEN,
+    body: "Arrives over a marked plot and flies a lawnmower pattern across it on its own, descending as it works and opening the pump only inside the envelope it is authorised for. The flow meter counts the litres actually dispensed, and that count is what the invoice is built from.",
+  },
+  {
+    letter: "B",
+    kicker: "Cargo",
+    name: "Courier",
+    tag: "70–105 m",
+    accent: GOLD,
+    body: "Collects a parcel at one address and puts it down at another, above the rooftops and below the helicopter lanes. A load cell confirms the parcel actually left, so a delivery is a measurement rather than a claim.",
+  },
+  {
+    letter: "C",
+    kicker: "Surveillance",
+    name: "Observer",
+    tag: "95–118 m",
+    accent: CYAN,
+    body: "Holds an orbit over a junction for the length of the survey, counting flow and queue length on board rather than shipping video home. What leaves the aircraft is a number, not a picture of the street below it.",
+  },
+  {
+    letter: "D",
+    kicker: "Emergency",
+    name: "Responder",
+    tag: "90–118 m",
+    accent: RED,
+    body: "Launches on an alert, runs direct to the coordinates and holds a close thermal picture over the seat of the fire until ground crews have it. The hotspot detection runs on the aircraft, not in a datacentre.",
+  },
+];
+
+function Disciplines() {
+  return (
+    <section className="border-b border-bezel">
+      <div className="mx-auto max-w-6xl px-5 py-20">
+        <SectionHead
+          num="03"
+          label="Fleet behaviour"
+          title={
+            <>
+              Four jobs, <Lit>four different aircraft</Lit>
+            </>
+          }
+          lede="The work itself is autonomous, not just the routing. Each airframe decides which behaviour it is running from the mission it chose to take, and flies an envelope its licence class allows."
+        />
+
+        <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2">
+          {DISCIPLINES.map((d, i) => (
+            <li key={d.name} className={stagger(i)}>
+              <GlowCard accent={d.accent} className="h-full">
+                <div className="flex items-start gap-3.5">
+                  <Badge accent={d.accent}>{d.letter}</Badge>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                        {d.kicker}
+                      </p>
+                      <span className="font-mono text-[10.5px] text-text-muted">{d.tag}</span>
+                    </div>
+                    <h3 className="mt-1 font-condensed text-[19px] font-semibold text-text-primary">
+                      {d.name}
+                    </h3>
+                    <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
+                      {d.body}
+                    </p>
+                  </div>
+                </div>
+              </GlowCard>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- fleet */
+
+/** Colour per discipline, so the roster reads the same way the map does. */
+const TYPE_ACCENT: Record<string, string> = {
+  cargo: GOLD,
+  agricultural: GREEN,
+  surveillance: CYAN,
+  emergency: RED,
+};
+
+function Fleet() {
+  return (
+    <section className="border-b border-bezel bg-panel-void">
+      <div className="mx-auto max-w-6xl px-5 py-20">
+        <SectionHead
+          num="04"
+          label="The fleet"
+          title={
+            <>
+              The aircraft, and <Lit>where they live</Lit>
+            </>
+          }
+          lede="Nine airframes on nine pads, read straight from the fleet definitions the simulation runs on — so this roster cannot drift from what actually flies. Within a discipline the pairing is always a heavy and a light: they accept the same work and fly it differently."
+        />
+
+        <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {FLEET.map((d, i) => {
+            const accent = TYPE_ACCENT[d.type] ?? GOLD;
+            return (
+              <li key={d.id} className={stagger(i)}>
+                <GlowCard accent={accent} className="flex h-full flex-col">
+                  <div className="mb-3.5 flex items-start justify-between gap-3">
+                    <Badge accent={accent}>{d.callsign}</Badge>
+                    <span className="text-right font-mono text-[10px] leading-snug text-text-muted">
+                      {d.specs.manufacturer}
+                      <br />
+                      {d.specs.model}
+                    </span>
+                  </div>
+
+                  <h3 className="font-condensed text-[19px] font-semibold text-text-primary">
+                    {d.name}
+                  </h3>
+                  <p className="mt-0.5 font-mono text-[11px] text-text-muted">{d.base.name}</p>
+
+                  <p className="mt-2.5 flex-1 text-[13px] leading-relaxed text-text-secondary">
+                    {d.brief}
+                  </p>
+
+                  <dl className="mt-4 grid grid-cols-3 gap-2 border-t border-bezel pt-3">
+                    <div>
+                      <dt className="readout-label">Altitude</dt>
+                      <dd className="readout mt-0.5 text-[12.5px]">
+                        {d.envelope.cruiseAltitude[0]}&ndash;{d.envelope.cruiseAltitude[1]} m
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="readout-label">Cruise</dt>
+                      <dd className="readout mt-0.5 text-[12.5px]">
+                        {d.envelope.cruiseSpeed[0]}&ndash;{d.envelope.cruiseSpeed[1]}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="readout-label">Licence</dt>
+                      <dd className="readout mt-0.5 text-[12.5px]">{d.specs.license}</dd>
+                    </div>
+                  </dl>
+
+                  {d.standby && (
+                    <p
+                      className="mt-3 rounded-lg px-2.5 py-2 text-[11.5px] leading-relaxed text-text-secondary"
+                      style={{ background: `${accent}12`, boxShadow: `inset 0 0 0 1px ${accent}2b` }}
+                    >
+                      Held off the public board. Flies only missions funded through the
+                      escrow, so paid work never queues.
+                    </p>
+                  )}
+                </GlowCard>
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="reveal mt-8 max-w-[64ch] text-[13px] leading-relaxed text-text-muted">
+          Every ceiling above sits under the 120 m SHGM allows for licensed commercial work
+          under SHT-&#304;HA1 and &#304;HA2, and every cruise speed under the airframe&rsquo;s own
+          rated maximum.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------ under the hood */
+
+const STACK = [
+  {
+    title: "Mission escrow",
+    tag: "Soroban · Rust",
+    body: "Holds the USDC for the length of the job and records the lira price beside the rate it was struck at. Thirteen tests, and both oracle-refusal paths are covered rather than assumed.",
+  },
+  {
+    title: "The price guard",
+    tag: "Reflector · SEP-40",
+    body: "There is no published Reflector crate, so the interface is declared directly against the deployed spec. It is read inside the payout call, which is the only place a guard is worth anything.",
+  },
+  {
+    title: "Lira on and off",
+    tag: "SEP-1 · 6 · 10 · 12 · 38",
+    body: "The app knows a home domain and an asset code. Every endpoint behind them is discovered from a stellar.toml at page load, which is what makes the integration portable instead of hardcoded.",
+  },
+  {
+    title: "Wallet and identity",
+    tag: "Wallets Kit v2",
+    body: "Connection and signing through the eligible-partner kit. The SEP-10 challenge is signed by the user’s own key, so authentication needs no password and creates no account.",
+  },
+  {
+    title: "The interface",
+    tag: "Next.js 16 · React 19",
+    body: "Typed end to end, with MapLibre carrying the operational map and the fleet simulation running as its own loop on a two-second tick. Server routes proxy the anchor so no key reaches the browser.",
+  },
+  {
+    title: "The edge",
+    tag: "ESP32 · Pixhawk · Jetson",
+    body: "Node code for the hardware this is shaped around: Ed25519 frame signing, a MAVLink bridge, thermal hotspot detection and a pump relay. None of it is wired to an aircraft yet, and the README says so.",
+  },
+];
+
+/** Contract green, oracle cyan, rails gold, edge red. */
+const STACK_ACCENT = [GREEN, CYAN, GOLD, GOLD, CYAN, RED];
+
+function UnderTheHood() {
+  return (
+    <section className="border-b border-bezel">
+      <div className="mx-auto max-w-6xl px-5 py-20">
+        <SectionHead
+          num="06"
+          label="The stack"
+          title={
+            <>
+              What it is <Lit>actually made of</Lit>
+            </>
+          }
+          lede="Six layers, and the interesting decisions are in the constraints rather than the library list."
+        />
+
+        <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {STACK.map((s, i) => (
+            <li key={s.title} className={stagger(i)}>
+              <GlowCard accent={STACK_ACCENT[i]} className="h-full">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <Badge accent={STACK_ACCENT[i]}>{String(i + 1).padStart(2, "0")}</Badge>
+                  <span className="shrink-0 font-mono text-[10.5px] text-text-muted">
+                    {s.tag}
+                  </span>
+                </div>
+                <h3 className="font-condensed text-[18px] font-semibold text-text-primary">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">{s.body}</p>
+              </GlowCard>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 /* -------------------------------------------------------- physical world */
+
+const PROPERTIES = [
+  {
+    term: "One key does both jobs",
+    accent: GREEN,
+    body: "Stellar accounts are Ed25519 keypairs, and so is the signature an ESP32 puts on a flight record. The key that signs which aircraft flew a route is the address that receives the payment — the same 32 bytes, with no registry and no trusted party in between. A machine can hold its own account.",
+  },
+  {
+    term: "Fiat is a standard",
+    accent: GOLD,
+    body: "SEP-1, 6, 10, 12 and 38 are an interface any anchor implements. The lira reaches the chain through that interface rather than a private arrangement, which is why the ramp discovers every endpoint from a stellar.toml at runtime. Point it at a production anchor and nothing else changes.",
+  },
+  {
+    term: "Settlement can refuse",
+    accent: RED,
+    body: "The escrow reads the price feed inside the payout call and declines on a stale or depegged number. When a machine pays a machine there is nobody to ring about a wrong figure, so the refusal has to live in the contract rather than in a team that notices on Monday.",
+  },
+  {
+    term: "Fees small enough to meter",
+    accent: CYAN,
+    body: "A charging pod ticking every two seconds cannot carry a cent of fee per tick. Sub-cent settlement is what makes a physical service chargeable by the second at all, instead of by the month.",
+  },
+];
 
 function PhysicalWorld() {
   return (
-    <section className="border-t border-bezel">
-      <div className="mx-auto max-w-6xl px-5 py-16">
-        <h2 className="font-condensed text-3xl font-semibold text-text-primary">
-          Stellar, off the screen
-        </h2>
+    <section className="border-b border-bezel bg-panel-void">
+      <div className="mx-auto max-w-6xl px-5 py-20">
+        <SectionHead
+          num="05"
+          label="The thesis"
+          title={
+            <>
+              Stellar, <Lit>off the screen</Lit>
+            </>
+          }
+          lede="This is not really about drones. A drone is just the first machine we pointed it at. The pattern underneath is older and larger than any airframe: something in the physical world does a job, proves that it did it, and is paid for it — with nobody standing in the middle to vouch for any of the three."
+        />
 
-        <p className="mt-4 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
-          This is not really about drones. A drone is just the first machine we pointed it
-          at. The pattern underneath is older and larger than any airframe: something in the
-          physical world does a job, proves that it did it, and is paid for it &mdash; with
-          nobody standing in the middle to vouch for any of the three. Almost every attempt
-          at that stalls in the same place. The work happens in the world, the money lives in
-          a bank, and the only thing joining them is an invoice and somebody&apos;s word.
+        <p className="reveal mt-4 max-w-[68ch] text-[14px] leading-relaxed text-text-secondary">
+          Almost every attempt at that stalls in the same place. The work happens in the
+          world, the money lives in a bank, and the only thing joining them is an invoice
+          and somebody&apos;s word. Stellar closes that gap, and four of its properties are
+          why &mdash; take any one away and this stops working.
         </p>
 
-        <p className="mt-3 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
-          Stellar closes that gap, and four of its properties are why. None of them are
-          decoration here &mdash; take any one away and this stops working.
-        </p>
+        <ul className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {PROPERTIES.map((p, i) => (
+            <li key={p.term} className={stagger(i)}>
+              <GlowCard accent={p.accent} className="h-full">
+                <div className="mb-3 flex items-center gap-3">
+                  <Badge accent={p.accent}>{String(i + 1).padStart(2, "0")}</Badge>
+                  <h3 className="font-condensed text-[18px] font-semibold text-text-primary">
+                    {p.term}
+                  </h3>
+                </div>
+                <p className="text-[13.5px] leading-relaxed text-text-secondary">{p.body}</p>
+              </GlowCard>
+            </li>
+          ))}
+        </ul>
 
-        <dl className="mt-8 grid grid-cols-1 gap-px border border-bezel bg-bezel sm:grid-cols-2">
-          <Property
-            term="One key does both jobs"
-            body="Stellar accounts are Ed25519 keypairs, and so is the signature an ESP32 puts on a flight record. The key that signs which aircraft flew a route is the address that receives the payment — the same 32 bytes, with no registry and no trusted party in between. A machine can hold its own account."
-          />
-          <Property
-            term="Fiat is a standard, not an integration"
-            body="SEP-1, 6, 10, 12 and 38 are an interface any anchor implements. The lira reaches the chain through that interface rather than a private arrangement, which is why the ramp discovers every endpoint from a stellar.toml at runtime. Point it at a production anchor and nothing else changes."
-          />
-          <Property
-            term="Settlement is allowed to refuse"
-            body="The escrow reads the price feed inside the payout call and declines on a stale or depegged number. When a machine pays a machine there is nobody to ring about a wrong figure, so the refusal has to live in the contract rather than in a team that notices on Monday."
-          />
-          <Property
-            term="Fees small enough to meter"
-            body="A charging pod ticking every two seconds cannot carry a cent of fee per tick. Sub-cent settlement is what makes a physical service chargeable by the second at all, instead of by the month."
-          />
-        </dl>
-
-        <p className="mt-8 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
+        <p className="reveal mt-10 max-w-[68ch] text-[15px] leading-relaxed text-text-secondary">
           Swap the aircraft out and the shape holds. An EV charger settling by the
           kilowatt-hour. A tractor billing for the hectares it actually covered. A cold-chain
           sensor proving a shipment never rose above four degrees, and releasing the payment
@@ -370,20 +768,11 @@ function PhysicalWorld() {
           for people.
         </p>
 
-        <p className="mt-4 max-w-[68ch] text-[15px] font-medium leading-relaxed text-text-primary">
+        <p className="reveal mt-4 max-w-[68ch] text-[17px] font-medium leading-relaxed text-text-primary">
           That is the gap this is built in. The drones are the proof, not the point.
         </p>
       </div>
     </section>
-  );
-}
-
-function Property({ term, body }: { term: string; body: string }) {
-  return (
-    <div className="bg-panel-base p-5">
-      <dt className="font-condensed text-[15px] font-semibold text-text-primary">{term}</dt>
-      <dd className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">{body}</dd>
-    </div>
   );
 }
 
@@ -419,15 +808,19 @@ function Foundations() {
           />
         </dl>
 
-        <div className="mt-10 flex flex-wrap gap-2.5">
-          <Link href="/dashboard" className="btn-primary">
+        <div className="reveal mt-12 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/dashboard"
+            className="btn-primary btn-lg inline-flex items-center gap-2"
+          >
             Open the console
+            <ArrowRight className="h-[18px] w-[18px]" />
           </Link>
           <a
             href="https://github.com/hsankc/RiverAir"
             target="_blank"
             rel="noreferrer"
-            className="btn-secondary"
+            className="btn-secondary btn-lg"
           >
             Read the source
           </a>

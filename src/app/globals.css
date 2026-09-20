@@ -321,6 +321,14 @@
     box-shadow: 0 0 18px -6px rgba(69, 212, 240, 0.5);
   }
 
+  /* The landing page's own size. Controls inside the product stay small; the
+     one thing a first-time visitor is meant to press should not. */
+  .btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
   /* =================== Backgrounds =================== */
 
   .bg-grid {
@@ -619,6 +627,43 @@
   animation-delay: 0.41s;
 }
 
+/* Sections below the fold announce themselves as they arrive, once each.
+   The hiding is scoped to `.reveals-armed`, which the observer hook puts on
+   <body> after it mounts — so if the script never runs, nothing is hidden and
+   the page reads exactly as it does with motion switched off. */
+.reveals-armed .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveals-armed .reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger the cards inside a block that has just arrived. */
+.reveal-d1 {
+  transition-delay: 0.05s;
+}
+.reveal-d2 {
+  transition-delay: 0.1s;
+}
+.reveal-d3 {
+  transition-delay: 0.15s;
+}
+.reveal-d4 {
+  transition-delay: 0.2s;
+}
+.reveal-d5 {
+  transition-delay: 0.25s;
+}
+.reveal-d6 {
+  transition-delay: 0.3s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -631,6 +676,11 @@
 
   .landing-in {
     opacity: 1 !important;
+  }
+
+  .reveals-armed .reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
