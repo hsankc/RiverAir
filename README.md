@@ -41,16 +41,31 @@ Built for the Rise In × Stellar Pro Hackathon 2026, Genesis Track. Stellar test
 
 ## The problem
 
-Turkish drone operators have a currency problem that has nothing to do with drones. Work
-is quoted and paid in lira. Cross-border customers, equipment suppliers and cloud bills
-are in dollars. The lira moves enough that the gap between agreeing a price and being paid
-is itself a risk, and the escrow arrangements that would normally cover that risk do not
-exist for a two-person operator flying agricultural jobs out past Çatalca.
+Turkey has the drones and it has the work. A large agricultural sector that needs spraying.
+Fire seasons that get longer every year. Junctions nobody has the staff to survey. Parcels
+that move slower than the roads they sit on. And a domestic UAV industry good enough to
+build the aircraft for all of it.
 
-RiverAir puts the money in a contract for the length of the job. The customer never leaves
-lira. The operator never leaves lira. The dollar-denominated leg in the middle is
-mechanical, auditable, and refuses to settle when the rate it depends on cannot be
-trusted.
+What is missing is everything after the flight. Autonomy today stops at the airframe: an
+aircraft can fly a pattern, but it cannot take the job, prove it did it, or be paid for it
+without a company, a dispatcher and an invoicing department behind it. That overhead is why
+drone work here is a service a firm sells rather than something an aircraft does.
+
+RiverAir closes that loop. The fleet is agentic — no central planner, no dispatcher. Each
+aircraft reads the job board, takes the work it is built for, flies it autonomously, and
+settles its own payment. Spraying, cargo, observation, fire response: four aircraft types,
+four different autonomous behaviours, one board.
+
+The sensitive part stays on the aircraft. The observer counts vehicles on board instead of
+shipping video home; the responder processes its own thermal feed and reports a hotspot,
+not a picture. What reaches the chain is a 32-byte hash of the flight record — proof the
+sortie happened, not a published route.
+
+Stellar is what makes the money side hold. The customer never leaves lira, the operator
+never leaves lira, and in between the payment sits in a Soroban contract for the length of
+the job, released against a live price feed and refused when that feed cannot be trusted.
+A two-person operation gets settlement guarantees that normally require a company — which
+is the point, because the aircraft is meant to be the company.
 
 ## An agentic fleet
 
@@ -109,15 +124,13 @@ itself needs exactly this: a brake that does not depend on anyone being awake to
 
 ### What this could be for Turkey
 
-Turkey already has the pieces. A large agricultural sector that needs spraying done. A
-serious domestic UAV industry. A regulator, SHGM, that already licenses commercial drone
-work under SHT-İHA1 and İHA2, which is why every aircraft in this fleet carries a licence
-class in its file.
+The regulatory ground is already there. SHGM licenses commercial drone work under
+SHT-İHA1 and İHA2, which is why every aircraft in this fleet carries a licence class in
+its file.
 
-What does not exist is a way for two people with two drones to take work and be paid
-reliably without building a company around it. Today that means a dispatcher, an accounts
-department, invoicing, and carrying the risk that the lira moves between agreeing a price
-and being paid.
+What a licence does not solve is the commercial side. A two-person operation still needs a
+dispatcher, an accounts department and invoicing before it can take work at all, and it
+still carries the risk that the lira moves between agreeing a price and being paid.
 
 RiverAir's argument is that a drone should be able to be a business by itself: hold its own
 key, take its own work, do the job, and be paid into a Turkish bank account without a

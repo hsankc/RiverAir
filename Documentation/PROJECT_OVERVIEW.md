@@ -19,19 +19,25 @@ Built for the Rise In × Stellar Pro Hackathon 2026, Genesis Track, on Stellar t
 
 ## The problem
 
-Two problems overlap here, and only one of them is about drones.
+Turkey has the drones and it has the work — agriculture that needs spraying, fire seasons
+that get longer every year, junctions nobody has the staff to survey, parcels that move
+slower than the roads they sit on. What is missing is everything after the flight.
 
-**The drone problem.** Drone networks today are closed systems. One company buys the
-aircraft, builds the charging infrastructure, runs the dispatch software, and handles
-payments and compliance. That is an enormous barrier to anyone who owns two drones and
-wants to put them to work.
+**The drone problem.** Autonomy today stops at the airframe. An aircraft can fly a pattern,
+but it cannot take the job, prove it did it, or be paid for it. Drone networks are closed
+systems: one company buys the aircraft, builds the charging infrastructure, runs the
+dispatch software, and handles payments and compliance. That is an enormous barrier to
+anyone who owns two drones and wants to put them to work.
 
-**The money problem, which is the harder one.** A Turkish operator quotes and is paid in
-lira. Their customers, equipment suppliers and cloud bills are frequently in dollars. The
+**The money problem.** A Turkish operator quotes and is paid in lira. Their customers,
+equipment suppliers and cloud bills are frequently in dollars. The
 lira moves enough that the gap between agreeing a price and being paid is itself a risk.
 The escrow arrangements that would normally absorb that risk do not exist for a two-person
 operation flying agricultural jobs outside İzmir — the fees and the paperwork are built for
 much larger contracts.
+
+Solve both and a drone stops being equipment a company owns and starts being a business
+that runs itself.
 
 ---
 
