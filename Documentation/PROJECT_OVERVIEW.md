@@ -79,7 +79,7 @@ that runs itself.
 | **Charging** | `/sky-charge` | Distributed pods with per-kWh micropayment metering |
 | **Manual control** | `/control` | FPV-style operator takeover with keyboard flight |
 | **Flight record** | `/flight-logs` | Searchable audit trail with CSV export |
-| **Dispatcher** | overlay | Natural-language fleet commands, OpenAI with a deterministic fallback |
+| **Dispatcher** | overlay | Natural-language fleet commands, Gemini with a deterministic fallback |
 
 See [DEMO_STATUS.md](DEMO_STATUS.md) for exactly which of these run against the live
 network and which are simulated.

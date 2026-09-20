@@ -32,7 +32,7 @@ Nothing in this section is mocked. Every item produces a transaction you can ope
 | **KYC** | SEP-12, auto-approved, collects and stores no personal data. | The anchor's real KYC, same endpoint shape. |
 | **The drone fleet** | Positions, telemetry, battery levels, charging sessions and the mission board are a client-side simulation. | MAVLink telemetry over `hardware-nodes/pixhawk-mavlink/node_bridge.py`. No aircraft is connected. |
 | **Charging sessions** | A timer meters energy and accrues a micropayment figure. | An ESP32 pod controller with a real energy meter. |
-| **AI dispatcher** | OpenAI `gpt-4o-mini` when a key is set, deterministic fallback replies otherwise. | Unchanged; it is real either way, just optional. |
+| **AI dispatcher** | Gemini `gemini-3.8-flash` when a key is set, deterministic fallback replies otherwise. | Unchanged; it is real either way, just optional. |
 
 ## Not claimed
 

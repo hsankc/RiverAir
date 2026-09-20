@@ -30,8 +30,8 @@ the system is arranged around them.
         ┌───────────┴──────────┐            │
         ▼                      ▼            ▼
 ┌────────────────┐   ┌──────────────┐  ┌──────────────────────┐
-│ /api/anchor/*  │   │  OpenAI API  │  │   Stellar testnet    │
-│  SEP proxy     │   │(gpt-4o-mini) │  │ ┌──────────────────┐ │
+│ /api/anchor/*  │   │  Gemini API  │  │   Stellar testnet    │
+│  SEP proxy     │   │(gemini-flash)│  │ ┌──────────────────┐ │
 │  (server-side) │   │ + fallback   │  │ │  mission-escrow  │ │
 └───────┬────────┘   └──────────────┘  │ │  (Soroban, Rust) │ │
         │                              │ └────────┬─────────┘ │
@@ -101,7 +101,7 @@ aircraft claims a job changes how the job looks.
 |---|---|
 | **`/api/ai-dispatch`** | Turns a natural-language command into a structured intent |
 | **`/api/agent-decision`** | Fleet decisions; returns 404 when no API key is configured |
-| **OpenAI gpt-4o-mini** | Primary interpreter |
+| **Gemini 3.8 Flash** | Primary interpreter |
 | **Fallback parser** | Deterministic rules when no key is present, so the demo never depends on one |
 
 ---
