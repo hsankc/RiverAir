@@ -15,7 +15,11 @@ export interface HomeBase {
 
 /** The envelope the aircraft flies in. Real units; the clock is what's scaled. */
 export interface FlightEnvelope {
-  /** Metres, picked per sortie from this range. */
+  /**
+   * Metres AGL, picked per sortie from this range. SHT-İHA caps standard
+   * commercial operations at 120 m, so no airframe here is given a ceiling
+   * above it — the fleet flies the envelope its licence class allows.
+   */
   cruiseAltitude: [number, number];
   /** km/h, picked per sortie from this range. */
   cruiseSpeed: [number, number];

@@ -28,9 +28,9 @@ export const catalcaAgri: DroneDefinition = {
 
   // Lower and slower than the T40 — smaller plots, more obstacles to clear.
   envelope: {
-    cruiseAltitude: [22, 34],
-    cruiseSpeed: [15, 22],
-    climbRate: 5,
+    cruiseAltitude: [2, 4],
+    cruiseSpeed: [12, 18],
+    climbRate: 2,
     drainPerTick: 0.14,
   },
 

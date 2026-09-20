@@ -530,7 +530,7 @@ export default function SkyMap({
           <div style="font-weight:700;margin-bottom:8px;color:${color};font-size:14px;letter-spacing:0.5px;display:flex;align-items:center;gap:6px">🛸 ${drone.name}</div>
           <div style="font-size:12px;color:#94A3B8;margin-bottom:4px">Tür: <span style="color:#F8FAFC;text-transform:capitalize">${drone.type}</span></div>
           <div style="font-size:12px;color:#94A3B8;margin-bottom:4px">Batarya: <span style="color:${drone.battery < 20 ? "#EF4444" : drone.battery < 50 ? "#F59E0B" : "#10B981"};font-weight:700">%${drone.battery.toFixed(0)}</span></div>
-          <div style="font-size:12px;color:#94A3B8;margin-bottom:4px">İrtifa: <span style="color:#F8FAFC">${drone.altitude}m</span> <span style="opacity:0.5">|</span> Hız: <span style="color:#F8FAFC">${drone.speed}km/s</span></div>
+          <div style="font-size:12px;color:#94A3B8;margin-bottom:4px">İrtifa: <span style="color:#F8FAFC">${drone.altitude}m</span> <span style="opacity:0.5">|</span> Hız: <span style="color:#F8FAFC">${drone.speed}km/h</span></div>
         </div>`
       );
     });

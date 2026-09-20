@@ -34,7 +34,7 @@ export function WeatherWidget() {
         </div>
         <div className="flex items-center gap-1">
           <Wind className="w-3.5 h-3.5 text-accent-cyan" />
-          <span className="tabular-nums">{weather.wind} km/s</span>
+          <span className="tabular-nums">{weather.wind} km/h</span>
         </div>
       </div>
     </div>

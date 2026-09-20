@@ -28,9 +28,9 @@ export const belgradFire: DroneDefinition = {
 
   // Above the smoke column, fast enough that the first look is worth having.
   envelope: {
-    cruiseAltitude: [180, 230],
-    cruiseSpeed: [65, 82],
-    climbRate: 18,
+    cruiseAltitude: [95, 118],
+    cruiseSpeed: [62, 76],
+    climbRate: 15,
     drainPerTick: 0.16,
   },
 

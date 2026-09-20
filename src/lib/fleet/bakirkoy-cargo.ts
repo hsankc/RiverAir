@@ -29,9 +29,9 @@ export const bakirkoyCargo: DroneDefinition = {
   // Fixed-wing cruise: higher and considerably faster than a multirotor, and
   // it sips battery once it is up on the wing.
   envelope: {
-    cruiseAltitude: [150, 195],
-    cruiseSpeed: [78, 96],
-    climbRate: 16,
+    cruiseAltitude: [80, 105],
+    cruiseSpeed: [62, 80],
+    climbRate: 14,
     drainPerTick: 0.07,
   },
 

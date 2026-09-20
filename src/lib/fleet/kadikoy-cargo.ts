@@ -29,9 +29,9 @@ export const kadikoyCargo: DroneDefinition = {
   // Above the rooftops, below the helicopter lanes, fast enough that a
   // cross-Bosphorus parcel beats the traffic.
   envelope: {
-    cruiseAltitude: [110, 150],
-    cruiseSpeed: [55, 70],
-    climbRate: 14,
+    cruiseAltitude: [70, 95],
+    cruiseSpeed: [48, 62],
+    climbRate: 12,
     drainPerTick: 0.1,
   },
 

@@ -29,9 +29,9 @@ export const atasehirWatch: DroneDefinition = {
 
   // Lower and quicker than the Matrice — short hops between junctions.
   envelope: {
-    cruiseAltitude: [120, 155],
-    cruiseSpeed: [46, 62],
-    climbRate: 13,
+    cruiseAltitude: [100, 118],
+    cruiseSpeed: [30, 45],
+    climbRate: 11,
     drainPerTick: 0.06,
   },
 

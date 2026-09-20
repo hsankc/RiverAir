@@ -29,9 +29,9 @@ export const aydosFire: DroneDefinition = {
 
   // Climbs fast and gets there fast; it is the first aircraft over an incident.
   envelope: {
-    cruiseAltitude: [160, 205],
-    cruiseSpeed: [56, 72],
-    climbRate: 15,
+    cruiseAltitude: [90, 112],
+    cruiseSpeed: [55, 68],
+    climbRate: 14,
     drainPerTick: 0.11,
   },
 

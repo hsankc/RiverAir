@@ -28,9 +28,9 @@ export const leventWatch: DroneDefinition = {
 
   // High enough to see a junction end to end and to stay clear of the towers.
   envelope: {
-    cruiseAltitude: [150, 190],
-    cruiseSpeed: [38, 50],
-    climbRate: 12,
+    cruiseAltitude: [95, 115],
+    cruiseSpeed: [28, 42],
+    climbRate: 11,
     drainPerTick: 0.08,
   },
 

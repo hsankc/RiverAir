@@ -28,9 +28,9 @@ export const silivriAgri: DroneDefinition = {
   // Spray height. Any higher and the chemical drifts; any faster and the
   // coverage goes patchy.
   envelope: {
-    cruiseAltitude: [28, 45],
-    cruiseSpeed: [18, 26],
-    climbRate: 6,
+    cruiseAltitude: [3, 6],
+    cruiseSpeed: [14, 22],
+    climbRate: 2,
     drainPerTick: 0.13,
   },
 
