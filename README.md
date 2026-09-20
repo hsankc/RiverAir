@@ -15,6 +15,8 @@ to release it at all if the price feed it is settling against has gone stale.
 
 Built for the Rise In × Stellar Pro Hackathon 2026, Genesis Track. Stellar testnet.
 
+**[Live demo](https://river-air.vercel.app)** · **[Pitch deck](Documentation/RiverAir-Pitch-Deck.pptx)** · **[Contract on stellar.expert](https://stellar.expert/explorer/testnet/contract/CBCAST5V6PFVJCPPQNQWCXXCL3WNGJTQJQYQKKDIVO5C6VOVLPWFRLWC)**
+
 ---
 
 ## On chain
