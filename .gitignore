@@ -57,11 +57,6 @@ LANDING_CONTENT.md
 # Media with non-English names
 fotoğraflar/
 
-# Anchor / Rust scaffold (not compiled)
-Anchor.toml
-Cargo.toml
-programs/
-
 # Database schema (security)
 supabase_setup.sql
 
